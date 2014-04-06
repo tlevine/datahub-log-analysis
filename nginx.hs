@@ -16,6 +16,8 @@ data Method = GET | POST deriving Show
 
 data HTTPVersion = V10 | V11 deriving Show
 
+data Scheme = HTTP | HTTPS deriving Show
+
 -- | Parser of values of type 'IP'.
 parseIP :: Parser IP
 parseIP = do
@@ -61,6 +63,21 @@ parseTimeOfDay = do
   second <- count 2 digit
   return $ TimeOfDay (read hour) (read minute) (read second)
 
+parseMethod :: Parser Method
+parseMethod = do
+      (string "GET" >> return GET)
+  <|> (string "POST" >> return POST)
+
+parseHTTPVersion :: Parser HTTPVersion
+parseHTTPVersion = do
+      (string "1.0" >> return V10)
+  <|> (string "1.1" >> return V11)
+
+parseScheme :: Parser Scheme
+parseScheme = do
+      (string "http" >> return HTTP)
+  <|> (string "https" >> return HTTPS)
+
 parseLogEntry = do
   ip <- parseIP
   string " - - ["
@@ -71,9 +88,9 @@ parseLogEntry = do
   char '"'
   method <- parseMethod
   char ' '
-  route <- parseRoute
+  route <- string
   string " HTTP/"
-  version <- parseVersion
+  version <- parseHTTPVersion
   char ' '
   statusCode <- count 3 digit
   char ' '
@@ -81,7 +98,7 @@ parseLogEntry = do
   char ' '
   char '"'
   scheme <- parseScheme
-  char '://datahub.io/' -- host
+  string "://datahub.io/" -- host
   char '"'
   char ' '
   char '"'
