@@ -12,7 +12,7 @@ import Control.Applicative
 -- | Type for IP's.
 data IP = IP Word8 Word8 Word8 Word8 deriving Show
 
-data Month = Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec deriving Show
+type Month = Int
 
 -- data Date =
 
@@ -34,18 +34,18 @@ parseIP = do
 
 parseMonth :: Parser Month
 parseMonth = do
-      (string "Jan" >> return Jan)
-  <|> (string "Feb" >> return Feb)
-  <|> (string "Mar" >> return Mar)
-  <|> (string "Apr" >> return Apr)
-  <|> (string "May" >> return May)
-  <|> (string "Jun" >> return Jun)
-  <|> (string "Jul" >> return Jul)
-  <|> (string "Aug" >> return Aug)
-  <|> (string "Sep" >> return Sep)
-  <|> (string "Oct" >> return Oct)
-  <|> (string "Nov" >> return Nov)
-  <|> (string "Dec" >> return Dec)
+      (string "Jan" >> return  1)
+  <|> (string "Feb" >> return  2)
+  <|> (string "Mar" >> return  3)
+  <|> (string "Apr" >> return  4)
+  <|> (string "May" >> return  5)
+  <|> (string "Jun" >> return  6)
+  <|> (string "Jul" >> return  7)
+  <|> (string "Aug" >> return  8)
+  <|> (string "Sep" >> return  9)
+  <|> (string "Oct" >> return 10)
+  <|> (string "Nov" >> return 11)
+  <|> (string "Dec" >> return 12)
 
 
 main :: IO ()
