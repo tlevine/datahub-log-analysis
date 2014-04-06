@@ -85,7 +85,7 @@ parseLogEntry = do
   char ':'
   timeOfDay <- parseTimeOfDay
   string " +0000" -- ignore timezone
-  char '"'
+  char ']'
 {-
   method <- parseMethod
   char ' '
