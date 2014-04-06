@@ -12,8 +12,6 @@ import Control.Applicative
 -- | Type for IP's.
 data IP = IP Word8 Word8 Word8 Word8 deriving Show
 
-type Month = Int
-
 -- data Date =
 
 data Method = GET | POST deriving Show
@@ -32,7 +30,7 @@ parseIP = do
   d4 <- decimal
   return $ IP d1 d2 d3 d4
 
-parseMonth :: Parser Month
+parseMonth :: Parser Int
 parseMonth = do
       (string "Jan" >> return  1)
   <|> (string "Feb" >> return  2)
@@ -54,7 +52,7 @@ parseDay = do
   month <- parseMonth
   char '/'
   year <- count 4 digit
-  return $ fromGregorian (read year) (read month) (read day)
+  return $ fromGregorian (read year) (month) (read day)
 
 parseTimeOfDay :: Parser TimeOfDay
 parseTimeOfDay = do
