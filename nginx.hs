@@ -82,6 +82,7 @@ parseLogEntry = do
   ip <- parseIP
   string " - - ["
   day <- parseDay
+{-
   char ':'
   timeOfDay <- parseTimeOfDay
   string " +0000" -- ignore timezone
@@ -103,6 +104,7 @@ parseLogEntry = do
   char ' '
   char '"'
   -- Ignore the user agent for now.
+-}
   
 
 main :: IO ()
