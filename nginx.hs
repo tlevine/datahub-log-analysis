@@ -82,11 +82,11 @@ parseLogEntry = do
   ip <- parseIP
   string " - - ["
   day <- parseDay
-{-
   char ':'
   timeOfDay <- parseTimeOfDay
   string " +0000" -- ignore timezone
   char '"'
+{-
   method <- parseMethod
   char ' '
   route <- string
@@ -105,7 +105,7 @@ parseLogEntry = do
   char '"'
   -- Ignore the user agent for now.
 -}
-  
+  return 3 
 
 main :: IO ()
 main = print $ parseOnly parseLogEntry "23.27.112.125 - - [02/Apr/2014:12:27:57 +0000] \"GET /user/register HTTP/1.0\" 200 4285 \"http://datahub.io/\" \"Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1\""
