@@ -2,7 +2,7 @@
 
 import Data.Word
 import Data.Time
-import Data.Attoparsec.Char8
+import Data.Attoparsec.Char8 as A
 import Control.Applicative
 
 -- Types --
@@ -20,11 +20,11 @@ data LogLine =
            , timeOfDay :: TimeOfDay
            , method :: Method
            , route :: String
-           , httpVersion :: HTTPVersion
-           , statusCode :: Int
-           , dunno :: Int
-           , scheme :: Scheme
-           , userAgent :: UserAgent
+         --, httpVersion :: HTTPVersion
+         --, statusCode :: Int
+         --, dunno :: Int
+         --, scheme :: Scheme
+         --, userAgent :: UserAgent
            } deriving Show    
 
 -- Parsers --
@@ -100,7 +100,7 @@ parseLogEntry = do
   method <- parseMethod
   char ' '
 {-
-  route <- string
+  route <- A.takeWhile . (/=' ')
   string " HTTP/"
   version <- parseHTTPVersion
   char ' '
