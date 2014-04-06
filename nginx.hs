@@ -5,20 +5,30 @@ import Data.Time
 import Data.Attoparsec.Char8
 import Control.Applicative
 
------------------------
--------- TYPES --------
------------------------
-
--- | Type for IP's.
+-- Types --
 data IP = IP Word8 Word8 Word8 Word8 deriving Show
 
-data Method = GET | POST deriving Show
+data Method = Get | Post deriving Show
 
 data HTTPVersion = V10 | V11 deriving Show
 
 data Scheme = HTTP | HTTPS deriving Show
 
--- | Parser of values of type 'IP'.
+main = print $ parseOnly parseLogEntry "23.27.112.125 - - [02/Apr/2014:12:27:57 +0000] \"GET /user/register HTTP/1.0\" 200 4285 \"http://datahub.io/\" \"Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1\""
+data LogEntry =                                                                                                                                                        
+  LogEntry { ip :: IP
+           , day :: Day
+           , timeOfDay :: TimeOfDay
+           , method :: Method
+           , route :: String
+           , httpVersion :: HTTPVersion
+           , statusCode :: Int
+           , dunno :: Int
+           , scheme :: Scheme
+           , userAgent :: UserAgent
+           } deriving Show    
+
+-- Parsers --
 parseIP :: Parser IP
 parseIP = do
   d1 <- decimal
@@ -65,8 +75,8 @@ parseTimeOfDay = do
 
 parseMethod :: Parser Method
 parseMethod = do
-      (string "GET" >> return GET)
-  <|> (string "POST" >> return POST)
+      (string "GET" >> return Get)
+  <|> (string "POST" >> return Post)
 
 parseHTTPVersion :: Parser HTTPVersion
 parseHTTPVersion = do
@@ -86,9 +96,11 @@ parseLogEntry = do
   timeOfDay <- parseTimeOfDay
   string " +0000" -- ignore timezone
   char ']'
-{-
+  char ' '
+  char '"'
   method <- parseMethod
   char ' '
+{-
   route <- string
   string " HTTP/"
   version <- parseHTTPVersion
@@ -109,7 +121,3 @@ parseLogEntry = do
 
 main :: IO ()
 main = print $ parseOnly parseLogEntry "23.27.112.125 - - [02/Apr/2014:12:27:57 +0000] \"GET /user/register HTTP/1.0\" 200 4285 \"http://datahub.io/\" \"Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1\""
-
-
-
-
