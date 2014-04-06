@@ -4,6 +4,7 @@ import Data.Word
 import Data.Time
 import Data.Attoparsec.Char8 as A
 import Control.Applicative
+import qualified Data.ByteString as B
 
 -- Types --
 data IP = IP Word8 Word8 Word8 Word8 deriving Show
@@ -14,18 +15,20 @@ data HTTPVersion = V10 | V11 deriving Show
 
 data Scheme = HTTP | HTTPS deriving Show
 
-data LogLine =                                                                                                                                                        
+data LogLine =
   LogLine  { ip :: IP
            , day :: Day
            , timeOfDay :: TimeOfDay
            , method :: Method
            , route :: String
-         --, httpVersion :: HTTPVersion
-         --, statusCode :: Int
-         --, dunno :: Int
-         --, scheme :: Scheme
-         --, userAgent :: UserAgent
-           } deriving Show    
+           , httpVersion :: HTTPVersion
+           , statusCode :: Int
+           , dunno :: Int
+           , scheme :: Scheme
+           , userAgent :: UserAgent
+             } deriving Show
+
+type Log = [LogLine]
 
 -- Parsers --
 parseIP :: Parser IP
@@ -115,7 +118,28 @@ parseLogEntry = do
   char ' '
   char '"'
   userAgent <- A.takeWhile (/='"')
-  return  userAgent
+  char '"'
+  return $
+    LogLine  { ip = ip
+             , day = day
+             , timeOfDay = timeOfDay
+             , method = method
+             , route = route
+             , httpVersion = version
+             , statusCode = statusCode
+             , dunno = dunno
+             , scheme = scheme
+             , userAgent = userAgent
+               } deriving Show
+
+logParser :: Parser Log
+logParser = many $ logLine <* endOfLine
+
+main1 :: IO ()
+main1 = print $ parseOnly parseLogEntry "23.27.112.125 - - [02/Apr/2014:12:27:57 +0000] \"GET /user/register HTTP/1.0\" 200 4285 \"http://datahub.io/\" \"Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1\""
+
+logfile = "/home/tlevine/safe/datahub-log-analysis/nginx/access.log"
+
 
 main :: IO ()
-main = print $ parseOnly parseLogEntry "23.27.112.125 - - [02/Apr/2014:12:27:57 +0000] \"GET /user/register HTTP/1.0\" 200 4285 \"http://datahub.io/\" \"Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1\""
+main = B.readFile logFile >>= print . parseOnly logParser
