@@ -20,7 +20,7 @@ data LogLine =
            , day :: Day
            , timeOfDay :: TimeOfDay
            , method :: Method
-           , route :: String
+           , route :: B.ByteString
            , httpVersion :: HTTPVersion
            , statusCode :: Int
            , dunno :: Int
