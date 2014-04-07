@@ -141,7 +141,7 @@ logFile = "/tmp/access.log"
 main :: IO ()
 main = do
   file <- B.readFile logFile
-  let r = parseOnly parseLog file
+  let r = parseOnly parseLogLine file
   case r of
     Left err -> putStrLn $ "A parsing error was found: " ++ err
     Right log -> putStrLn $ show log
