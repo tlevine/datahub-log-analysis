@@ -139,4 +139,8 @@ parseLog = many $ parseLogLine <* endOfLine
 logFile = "/tmp/access.log"
 
 main :: IO ()
-main = B.readFile logFile >>= print . parseOnly parseLog
+main = do
+  raw <- B.readFile logFile
+  results <- parseOnly parseLog
+
+-- main = B.readFile logFile >>= print . parseOnly parseLog
