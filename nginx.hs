@@ -135,10 +135,8 @@ parseLogLine = do
 parseLog :: Parser Log
 parseLog = many $ parseLogLine <* endOfLine
 
-main1 :: IO ()
-main1 = print $ parseOnly parseLogLine "23.27.112.125 - - [02/Apr/2014:12:27:57 +0000] \"GET /user/register HTTP/1.0\" 200 4285 \"http://datahub.io/\" \"Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1\""
-
-logFile = "/home/tlevine/safe/datahub-log-analysis/nginx/access.log"
+--logFile = "/home/tlevine/safe/datahub-log-analysis/nginx/access.log"
+logFile = "/tmp/access.log"
 
 main :: IO ()
 main = B.readFile logFile >>= print . parseOnly parseLog
