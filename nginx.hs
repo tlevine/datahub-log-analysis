@@ -139,4 +139,9 @@ parseLog = many $ parseLogLine <* endOfLine
 logFile = "/tmp/access.log"
 
 main :: IO ()
-main = B.readFile logFile >>= print . parseOnly parseLog
+main = do
+  file <- B.readFile logFile
+  let r = parseOnly parseLog file
+  case r of
+    Left err -> putStrLn $ "A parsing error was found: " ++ err
+    Right log -> putStrLn $ show log
